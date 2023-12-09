@@ -10,7 +10,10 @@ jobs:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml
     with:
-      ref: ${{ github.ref }}
+      imagetag: ${{ github.ref_name }}
+      username: ${{ vars.user }}
+    secrets:
+      password: ${{ secrets.password }}
     needs: []
   call-build:
     name: call build
