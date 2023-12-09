@@ -8,6 +8,6 @@ on:
 jobs:
   nimble test:
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ vars.user }}/ci-test:${{ inputs.imagetag }}-builder
+    container: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}-builder
     steps:
     - run: nimble test

@@ -12,7 +12,7 @@ on:
         type: string
 
 jobs:
-  build buiulder image:
+  build and push:
     strategy:
       matrix:
         platform:
@@ -37,11 +37,11 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        tags: ghcr.io/${{ vars.user }}/ci-test:${{ inputs.imagetag }}
+        tags: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}
         platform: ${{ matrix.platform }}
         cache-from: |
           type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platform }}
           type=gha,scope=main-${{ matrix.platform }}
-          type=registry,ref=ghcr.io/${{ vars.user }}/ci-test
+          type=registry,ref=ghcr.io/${{ inputs.username }}/ci-test
         cache-to: type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platform }}
         push: true

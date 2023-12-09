@@ -8,6 +8,6 @@ on:
 jobs:
   system test:
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ vars.user }}/ci-test:${{ inputs.imagetag }}-builder
+    container: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}-builder
     steps:
     - run: echo system test
