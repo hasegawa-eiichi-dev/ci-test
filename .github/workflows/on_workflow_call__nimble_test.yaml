@@ -34,10 +34,10 @@ jobs:
         tags: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}
         platform: ${{ matrix.platform }}
         cache-from: |
-          type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platform }}
-          type=gha,scope=main-${{ matrix.platform }}
+          type=gha,scope=${{ inputs.imagetag }}
+          type=gha,scope=main
           type=registry,ref=ghcr.io/${{ inputs.username }}/ci-test
-        cache-to: type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platform }}
+        cache-to: type=gha,scope=${{ inputs.imagetag }}
         push: true
     - name: Nimble Test
       run: nimble test
