@@ -12,6 +12,7 @@ jobs:
   call build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
+    env:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
@@ -23,6 +24,7 @@ jobs:
   dev system test:
     name: dev system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
+    env:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
