@@ -1,0 +1,13 @@
+on:
+  workflow_call:
+    inputs:
+      imagetag:
+        required: true
+        type: string
+
+jobs:
+  system test:
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ vars.user }}/ci-test:${{ inputs.imagetag }}-builder
+    steps:
+    - run: echo system test
