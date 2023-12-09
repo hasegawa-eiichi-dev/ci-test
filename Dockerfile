@@ -1,6 +1,5 @@
 FROM nimlang/nim:2.0.0-alpine-onbuild AS base
 WORKDIR /ci-test
-RUN apk add clang
 COPY ci_test.nimble nim.cfg ./
 RUN nimble -y install -d
 
