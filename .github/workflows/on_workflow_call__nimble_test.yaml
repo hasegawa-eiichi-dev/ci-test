@@ -11,6 +11,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      ref: ${{ inputs.ref }}
+      with:
+        ref: ${{ inputs.ref }}
     - name: Nimble Test
       run: nimble test
