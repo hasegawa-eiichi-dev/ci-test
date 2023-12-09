@@ -10,7 +10,7 @@ permissions: read-all
 jobs:
   call build:
     name: call build
-    uses: ./.github/on_workflow_call/build.yaml
+    uses: .github/workflows/on_workflow_call/build.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
@@ -21,7 +21,7 @@ jobs:
     - run: echo stg deploy
   stg system test:
     name: stg system test
-    uses: ./.github/on_workflow_call/system_test.yaml
+    uses: .github/workflows/on_workflow_call/system_test.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
