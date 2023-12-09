@@ -8,7 +8,7 @@ permissions: read-all
 jobs:
   call nimble test:
     name: call nimble test
-    uses: ${{ github.github_action_repository }}/.github/on_workflow_call/nimble_test.yaml
+    uses: ${{ github.repository }}/.github/on_workflow_call/nimble_test.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
@@ -17,7 +17,7 @@ jobs:
     - call build
   call build:
     name: call build
-    uses: ${{ github.github_action_repository }}/.github/on_workflow_call/build.yaml
+    uses: ${{ github.repository }}/.github/on_workflow_call/build.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
