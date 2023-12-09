@@ -8,7 +8,7 @@ permissions: read-all
 jobs:
   call build:
     name: call build
-    uses: ./.github/workflows/on_workflow_call/build.yaml
+    uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
