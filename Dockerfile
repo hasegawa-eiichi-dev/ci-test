@@ -8,4 +8,4 @@ COPY . .
 RUN nimble build -x --cc:clang --threads:on
 
 FROM scratch
-COPY --from builder /ci-test/bin /bin
+COPY --from=builder /ci-test/bin /bin

@@ -1,19 +1,16 @@
 on:
   workflow_call:
     inputs:
-      imagetag:
+      ref:
         required: true
         type: string
-      username:
-        required: true
-        type: string
-    secrets:
-      password:
-        required: true
 
 jobs:
   nimble-test:
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}-builder
     steps:
-    - run: nimble test
+    - name: Checkout
+      uses: actions/checkout@v4
+      ref: ${{ inputs.ref }}
+    - name: Nimble Test
+      run: nimble test
