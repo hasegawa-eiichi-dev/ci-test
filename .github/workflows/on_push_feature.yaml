@@ -6,7 +6,7 @@ on:
 permissions: read-all
 
 jobs:
-  call nimble test:
+  call-nimble-test:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml
     with:
@@ -14,7 +14,7 @@ jobs:
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
-  call build:
+  call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:

@@ -6,7 +6,7 @@ on:
 permissions: read-all
 
 jobs:
-  call build:
+  call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
@@ -14,11 +14,11 @@ jobs:
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
-  dev deploy:
+  dev-deploy:
     runs-on: ubuntu-latest
     steps:
     - run: echo dev deploy
-  dev system test:
+  dev-system-test:
     name: dev system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:

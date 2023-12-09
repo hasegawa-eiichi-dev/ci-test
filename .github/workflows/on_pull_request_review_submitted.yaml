@@ -8,7 +8,7 @@ on:
 permissions: read-all
 
 jobs:
-  call build:
+  call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
@@ -16,11 +16,11 @@ jobs:
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
-  stg deploy:
+  stg-deploy:
     runs-on: ubuntu-latest
     steps:
     - run: echo stg deploy
-  stg system test:
+  stg-system-test:
     name: stg system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
