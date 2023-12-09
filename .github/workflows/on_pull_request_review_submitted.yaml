@@ -11,6 +11,7 @@ env:
   password: ${{ secrets.password }}
 
 jobs:
+  env:
   call build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml

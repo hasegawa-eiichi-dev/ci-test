@@ -9,6 +9,7 @@ env:
   password: ${{ secrets.password }}
 
 jobs:
+  env:
   call nimble test:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml
