@@ -10,7 +10,6 @@ on:
     secrets:
       password:
         required: true
-        type: string
 
 jobs:
   nimble-test:
