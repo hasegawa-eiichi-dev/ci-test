@@ -1,17 +1,12 @@
-FROM nimlang/nim:2.0.0-alpine-onbuild AS nim
+FROM nimlang/nim:2.0.0-alpine-onbuild AS base
 WORKDIR /ci-test
 COPY ci_test.nimble ./
 RUN apt-get install --no-install-recommends clang
-RUN echo $PATH
-RUN whereis nimble
 RUN nimble -y install -d
 
-FROM nim AS builder
-RUN ls -a
+FROM base AS builder
 COPY . .
-RUN ls -a
-RUN echo $PATH
-RUN whereis nimble
+RUN apt-get install --no-install-recommends clang
 RUN nimble build -x --cc:clang --threads:on
 
 FROM scratch
