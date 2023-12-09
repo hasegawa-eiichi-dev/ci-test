@@ -6,8 +6,7 @@ RUN nimble -y install -d
 
 FROM base AS builder
 COPY . .
-RUN apt-get install --no-install-recommends clang
-RUN nimble build -x --cc:clang --threads:on
+RUN nimble build -x --threads:on
 
 FROM scratch
 COPY --from=builder /ci-test/bin /bin
