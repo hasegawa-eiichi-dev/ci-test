@@ -4,6 +4,13 @@ on:
       imagetag:
         required: true
         type: string
+      username:
+        required: true
+        type: string
+    secrets:
+      password:
+        required: true
+        type: string
 
 jobs:
   nimble test:

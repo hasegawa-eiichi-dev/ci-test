@@ -5,24 +5,20 @@ on:
 
 permissions: read-all
 
-env:
-  password: ${{ secrets.password }}
-
 jobs:
-  env:
   call nimble test:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml
-    env:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-      password: ${{ env.password }}
+    secrets:
+      password: ${{ secrets.password }}
   call build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
-    env:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-      password: ${{ env.password }}
+    secrets:
+      password: ${{ secrets.password }}

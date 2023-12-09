@@ -5,19 +5,15 @@ on:
 
 permissions: read-all
 
-env:
-  password: ${{ secrets.password }}
-
 jobs:
-  env:
   call build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
-    env:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-      password: ${{ env.password }}
+    secrets:
+      password: ${{ secrets.password }}
   prd deploy:
     runs-on: ubuntu-latest
     steps:
