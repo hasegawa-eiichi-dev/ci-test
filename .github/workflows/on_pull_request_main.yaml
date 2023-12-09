@@ -5,6 +5,9 @@ on:
 
 permissions: read-all
 
+env:
+  password: ${{ secrets.password }}
+
 jobs:
   call build:
     name: call build
@@ -12,7 +15,7 @@ jobs:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-      password: ${{ secrets.password }}
+      password: ${{ env.password }}
   dev deploy:
     runs-on: ubuntu-latest
     steps:
@@ -23,4 +26,4 @@ jobs:
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-      password: ${{ secrets.password }}
+      password: ${{ env.password }}
