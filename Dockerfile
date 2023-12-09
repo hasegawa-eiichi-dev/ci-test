@@ -1,6 +1,7 @@
 FROM nimlang/nim:2.0.0-alpine-onbuild AS nim
 WORKDIR /ci-test
 COPY ci_test.nimble ./
+RUN apt-get install --no-install-recommends clang
 RUN nimble -y install -d
 
 FROM nim AS builder
