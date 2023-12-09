@@ -1,0 +1,19 @@
+on:
+  release:
+    types:
+    - published
+
+permissions: read-all
+
+jobs:
+  call build:
+    name: call build
+    uses: ${{ github.github_action_repository }}/.github/on_workflow_call/build.yaml
+    with:
+      imagetag: ${{ github.ref_name }}
+      username: password: ${{ vars.user }}
+      password: ${{ secrets.password }}
+  prd deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo prd deploy

@@ -1,0 +1,15 @@
+on:
+  workflow_call:
+    inputs:
+      imagetag:
+        required: true
+        type: string
+
+jobs:
+  nimble test:
+    runs-on: ubuntu-latest
+    container: ghcr.io/password: ${{ vars.user }}/ci-test:${{ inputs.imagetag }}-builder
+    steps:
+    - name: nimble test
+      run:
+      - nimble test

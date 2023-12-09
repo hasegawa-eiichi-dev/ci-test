@@ -1,0 +1,4 @@
+bin/
+nimcache/
+testresults/
+testresults.html
