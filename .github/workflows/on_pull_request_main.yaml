@@ -6,11 +6,11 @@ on:
 permissions: read-all
 
 jobs:
-  call-build:
+  dev-call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
-      imagetag: ${{ github.ref_name }}
+      imagetag: dev
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
@@ -22,7 +22,7 @@ jobs:
     name: dev system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
-      imagetag: ${{ github.ref_name }}
+      imagetag: dev
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}

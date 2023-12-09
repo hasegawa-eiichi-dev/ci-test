@@ -1,18 +1,16 @@
 on:
-  pull_request_review:
-    types:
-    - submitted
+  push:
     branches:
     - main
 
 permissions: read-all
 
 jobs:
-  call-build:
+  stg-call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
-      imagetag: ${{ github.ref_name }}
+      imagetag: stg
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
@@ -24,7 +22,7 @@ jobs:
     name: stg system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
-      imagetag: ${{ github.ref_name }}
+      imagetag: stg
       username: ${{ vars.user }}
     secrets:
       password: ${{ secrets.password }}
