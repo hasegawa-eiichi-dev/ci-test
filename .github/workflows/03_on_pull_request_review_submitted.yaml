@@ -13,7 +13,7 @@ jobs:
     uses: ${{ github.github_action_repository }}/.github/on_workflow_call/build.yaml
     with:
       imagetag: ${{ github.ref_name }}
-      username: password: ${{ vars.user }}
+      username: ${{ vars.user }}
       password: ${{ secrets.password }}
   stg deploy:
     runs-on: ubuntu-latest
@@ -24,5 +24,5 @@ jobs:
     uses: ${{ github.github_action_repository }}/.github/on_workflow_call/system_test.yaml
     with:
       imagetag: ${{ github.ref_name }}
-      username: password: ${{ vars.user }}
+      username: ${{ vars.user }}
       password: ${{ secrets.password }}

@@ -11,7 +11,7 @@ jobs:
     uses: ${{ github.github_action_repository }}/.github/on_workflow_call/nimble_test.yaml
     with:
       imagetag: ${{ github.ref_name }}
-      username: password: ${{ vars.user }}
+      username: ${{ vars.user }}
       password: ${{ secrets.password }}
     needs:
     - call build
@@ -20,5 +20,5 @@ jobs:
     uses: ${{ github.github_action_repository }}/.github/on_workflow_call/build.yaml
     with:
       imagetag: ${{ github.ref_name }}
-      username: password: ${{ vars.user }}
+      username: ${{ vars.user }}
       password: ${{ secrets.password }}
