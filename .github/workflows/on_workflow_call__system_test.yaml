@@ -7,13 +7,12 @@ on:
       username:
         required: true
         type: string
-    secrets:
-      password:
-        required: true
+    # secrets:
+    #   password:
+    #     required: true
 
 jobs:
   system-test:
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}-builder
     steps:
     - run: echo system test

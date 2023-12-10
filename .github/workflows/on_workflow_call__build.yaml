@@ -7,9 +7,9 @@ on:
       username:
         required: true
         type: string
-    secrets:
-      password:
-        required: true
+    # secrets:
+    #   password:
+    #     required: true
 
 jobs:
   build-and-push:
@@ -17,8 +17,8 @@ jobs:
       matrix:
         platforms:
         - linux/amd64
-        # - linux/arm64
-        # - linux/arm64/v8
+        - linux/arm64
+        - linux/arm64/v8
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -32,8 +32,8 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ inputs.username }}
-        password: ${{ secrets.password }}
-    - name: Build
+        password: ${{ secrets.github_token }}
+    - name: Build and Push
       uses: docker/build-push-action@v2
       with:
         context: .

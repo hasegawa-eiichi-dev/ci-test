@@ -6,15 +6,17 @@ on:
 permissions: read-all
 
 jobs:
-  call-build:
+  prd-call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
       imagetag: ${{ github.ref_name }}
       username: ${{ vars.user }}
-    secrets:
-      password: ${{ secrets.password }}
+    # secrets:
+    #   password: ${{ secrets.password }}
   prd-deploy:
     runs-on: ubuntu-latest
     steps:
     - run: echo prd deploy
+    needs:
+    - prd-call-build

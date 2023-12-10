@@ -12,17 +12,21 @@ jobs:
     with:
       imagetag: dev
       username: ${{ vars.user }}
-    secrets:
-      password: ${{ secrets.password }}
+    # secrets:
+    #   password: ${{ secrets.password }}
   dev-deploy:
     runs-on: ubuntu-latest
     steps:
     - run: echo dev deploy
+    needs:
+    - dev-call-build
   dev-system-test:
     name: dev system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
       imagetag: dev
       username: ${{ vars.user }}
-    secrets:
-      password: ${{ secrets.password }}
+    # secrets:
+    #   password: ${{ secrets.password }}
+    needs:
+    - dev-deploy

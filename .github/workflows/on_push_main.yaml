@@ -12,17 +12,21 @@ jobs:
     with:
       imagetag: stg
       username: ${{ vars.user }}
-    secrets:
-      password: ${{ secrets.password }}
+    # secrets:
+    #   password: ${{ secrets.password }}
   stg-deploy:
     runs-on: ubuntu-latest
     steps:
     - run: echo stg deploy
+    needs:
+    - stg-call-build
   stg-system-test:
     name: stg system test
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
       imagetag: stg
       username: ${{ vars.user }}
-    secrets:
-      password: ${{ secrets.password }}
+    # secrets:
+    #   password: ${{ secrets.password }}
+    needs:
+    - stg-deploy
