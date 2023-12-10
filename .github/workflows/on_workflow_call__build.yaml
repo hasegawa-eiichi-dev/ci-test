@@ -11,6 +11,10 @@ on:
     #   password:
     #     required: true
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-push:
     strategy:

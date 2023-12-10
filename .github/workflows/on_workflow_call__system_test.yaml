@@ -11,6 +11,8 @@ on:
     #   password:
     #     required: true
 
+permissions: read-all
+
 jobs:
   system-test:
     runs-on: ubuntu-latest

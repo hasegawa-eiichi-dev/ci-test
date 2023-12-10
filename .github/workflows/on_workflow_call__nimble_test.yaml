@@ -11,6 +11,8 @@ on:
     #   password:
     #     required: true
 
+permissions: read-all
+
 jobs:
   nimble-test:
     strategy:
