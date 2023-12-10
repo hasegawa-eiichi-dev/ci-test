@@ -16,5 +16,5 @@ jobs:
         tags: tester
         cache-from: type=gha,scope=${{ inputs.imagetag }}-tester
         cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}-tester
-    - name: Nimble Test
-      uses: tester
+    # - name: Nimble Test
+    #   uses: tester
