@@ -22,3 +22,4 @@ task test, "Run the test suite":
 
 after test:
   exec "testament html"
+  mvFile "testresults.html", "testresults/testresults.html"
