@@ -2,3 +2,4 @@ bin/
 nimcache/
 testresults/
 testresults.html
+outputGotten.txt

@@ -19,12 +19,17 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Nimble Test
+    - name: Build Tester
       uses: docker/build-push-action@v2
       with:
         context: .
-        target: test
-        tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
+        target: base
+        tags: tester
         cache-from: type=gha,scope=${{ inputs.imagetag }}
-        cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}
-        push: true
+    - name: Nimble Test
+      run: docker run --rm -it -v=/tmp/testresults:/ci-test/testresults tester nimble test
+    - name: Upload Test Result
+      uses: actions/upload-artifact@v3
+      with:
+        name: testresults-${{ inputs.imagetag }}
+        path: /tmp/testresults/testresults.html

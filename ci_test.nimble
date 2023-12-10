@@ -18,7 +18,7 @@ requires "db >= 1.1.0"
 # Tasks
 
 task test, "Run the test suite":
-  exec "testament --megatest:off all"
+  exec "testament --megatest:on --print all"
 
 after test:
   exec "testament html"
