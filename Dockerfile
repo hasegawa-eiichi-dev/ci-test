@@ -7,7 +7,6 @@ COPY . .
 FROM prebuild AS tester
 RUN nimble build --stackTrace:on --lineTrace:on --threads:on -x -a
 # TODO: check advanced option: https://nim-lang.org/docs/nimc.html
-CMD nimble test
 
 FROM prebuild AS build
 RUN nimble install -d:release

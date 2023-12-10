@@ -6,7 +6,7 @@ on:
         type: string
 
 jobs:
-  nimble-test:
+  build-tester:
     runs-on: ubuntu-latest
     steps:
     - name: Build Tester
@@ -17,5 +17,11 @@ jobs:
         tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
         cache-from: type=gha,scope=${{ inputs.imagetag }}
         cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}
+        push: true
+  nimble-test:
+    runs-on: ubuntu-latest
+    image: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
+    needs: build-tester
+    steps:
     - name: Nimble Test
-      uses: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
+      run: nimble test
