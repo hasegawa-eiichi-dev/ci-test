@@ -20,14 +20,17 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Tester
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       with:
         context: .
         target: base
         tags: tester
         cache-from: type=gha,scope=${{ inputs.imagetag }}
+        outputs: type=docker,dest=./tester.tar
     - name: Nimble Test
-      run: docker run --rm -v=/tmp/testresults:/ci-test/testresults tester nimble test
+      run: |
+        docker load --input ./tester.tar
+        docker run --rm -v=/tmp/testresults:/ci-test/testresults tester nimble test
     - name: Upload Test Result
       uses: actions/upload-artifact@v3
       with:
