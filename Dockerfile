@@ -10,4 +10,4 @@ RUN nimble install -d:release
 # TODO: check advanced option: https://nim-lang.org/docs/nimc.html
 
 FROM scratch AS product
-COPY --from=builder /ci-test/bin /bin
+COPY --from=build /ci-test/bin /bin

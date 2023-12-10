@@ -27,7 +27,7 @@ jobs:
         tags: tester
         cache-from: type=gha,scope=${{ inputs.imagetag }}
     - name: Nimble Test
-      run: docker run --rm -it -v=/tmp/testresults:/ci-test/testresults tester nimble test
+      run: docker run --rm -v=/tmp/testresults:/ci-test/testresults tester nimble test
     - name: Upload Test Result
       uses: actions/upload-artifact@v3
       with:
