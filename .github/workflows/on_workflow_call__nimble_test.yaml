@@ -37,6 +37,5 @@ jobs:
     steps:
     - name: Nimble Test
       run: |
-        pwd || true
-        ls -a || true
+        cd /ci-test
         nimble test
