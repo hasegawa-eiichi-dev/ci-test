@@ -6,7 +6,7 @@ on:
         type: string
 
 jobs:
-  build-tester:
+  nimble-test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -19,23 +19,12 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build Tester
+    - name: Nimble Test
       uses: docker/build-push-action@v2
       with:
         context: .
-        target: tester
+        target: test
         tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
         cache-from: type=gha,scope=${{ inputs.imagetag }}
         cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}
         push: true
-  nimble-test:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
-      volumes: []
-    needs: build-tester
-    steps:
-    - name: Nimble Test
-      run: |
-        cd /ci-test
-        nimble test
