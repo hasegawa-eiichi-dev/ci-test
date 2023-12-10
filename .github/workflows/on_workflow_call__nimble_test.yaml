@@ -34,4 +34,7 @@ jobs:
     needs: build-tester
     steps:
     - name: Nimble Test
-      run: nimble test
+      run: |
+        pwd || true
+        ls -a || true
+        nimble test
