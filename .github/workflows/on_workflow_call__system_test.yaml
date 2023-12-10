@@ -4,14 +4,6 @@ on:
       imagetag:
         required: true
         type: string
-      username:
-        required: true
-        type: string
-    # secrets:
-    #   password:
-    #     required: true
-
-permissions: read-all
 
 jobs:
   system-test:

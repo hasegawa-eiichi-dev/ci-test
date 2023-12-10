@@ -3,19 +3,12 @@ on:
     branches:
     - main
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   dev-call-build:
     name: call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
       imagetag: dev
-      username: ${{ vars.user }}
-    # secrets:
-    #   password: ${{ secrets.password }}
   dev-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -27,8 +20,5 @@ jobs:
     uses: ./.github/workflows/on_workflow_call__system_test.yaml
     with:
       imagetag: dev
-      username: ${{ vars.user }}
-    # secrets:
-    #   password: ${{ secrets.password }}
     needs:
     - dev-deploy

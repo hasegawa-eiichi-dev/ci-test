@@ -4,14 +4,6 @@ on:
       imagetag:
         required: true
         type: string
-      username:
-        required: true
-        type: string
-    # secrets:
-    #   password:
-    #     required: true
-
-permissions: read-all
 
 jobs:
   nimble-test:
@@ -39,12 +31,12 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        tags: ghcr.io/${{ inputs.username }}/ci-test:${{ inputs.imagetag }}
+        tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
         platforms: ${{ matrix.platforms }}
         cache-from: |
           type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platforms }}
           type=gha,scope=main-${{ matrix.platforms }}
-          type=registry,ref=ghcr.io/${{ inputs.username }}/ci-test
+          type=registry,ref=ghcr.io/${{ github.repository_owner }}/ci-test
         cache-to: type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platforms }}
         push: false
     - name: Nimble Test
