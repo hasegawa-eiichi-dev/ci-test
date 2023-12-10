@@ -4,18 +4,8 @@ on:
     - feature-*
 
 jobs:
-  call-build:
-    name: call build
-    uses: ./.github/workflows/on_workflow_call__build.yaml
-    permissions:
-      contents: read
-      packages: write
-    with:
-      imagetag: ${{ github.ref_name }}
   call-nimble-test:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml
     with:
       imagetag: ${{ github.ref_name }}
-    needs:
-    - call-build

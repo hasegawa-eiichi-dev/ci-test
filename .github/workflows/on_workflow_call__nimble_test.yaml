@@ -8,13 +8,13 @@ on:
 jobs:
   nimble-test:
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
-    - name: Build
+    - name: Build Tester
       uses: docker/build-push-action@v2
       with:
         context: .
-        tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
-        cache-from: type=gha,scope=${{ inputs.imagetag }}
-        push: false
+        target: tester
+        tags: tester
+        cache-from: type=gha,scope=${{ inputs.imagetag }}-tester
+        cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}-tester
     - name: Nimble Test
-      run: nimble test
+      uses: tester
