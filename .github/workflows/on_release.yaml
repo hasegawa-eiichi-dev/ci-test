@@ -3,7 +3,9 @@ on:
     types:
     - published
 
-permissions: read-all
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   prd-call-build:
