@@ -41,5 +41,5 @@ jobs:
           type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platforms }}
           type=gha,scope=main-${{ matrix.platforms }}
           type=registry,ref=ghcr.io/${{ github.repository_owner }}/ci-test
-        cache-to: type=gha,scope=${{ inputs.imagetag }}-${{ matrix.platforms }}
+        cache-to: type=gha,mode=max,scope=${{ inputs.imagetag }}-${{ matrix.platforms }}
         push: true
