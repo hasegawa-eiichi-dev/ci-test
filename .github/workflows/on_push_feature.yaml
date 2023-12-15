@@ -9,6 +9,7 @@ jobs:
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
       imagetag: ${{ github.ref_name }}
+      nim_options: "--stackTrace:on --lineTrace:on --threads:on -x -a"
   call-nimble-test:
     name: call nimble test
     uses: ./.github/workflows/on_workflow_call__nimble_test.yaml

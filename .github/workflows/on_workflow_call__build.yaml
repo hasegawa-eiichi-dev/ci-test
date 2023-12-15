@@ -4,6 +4,9 @@ on:
       imagetag:
         required: true
         type: string
+      nim_options:
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -36,6 +39,8 @@ jobs:
       with:
         context: .
         target: product
+        build-args: |
+          nim_options=${{ inputs.nim_options }}
         tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
         platforms: ${{ matrix.platforms }}
         cache-from: |
