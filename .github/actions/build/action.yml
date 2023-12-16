@@ -12,8 +12,9 @@ inputs:
     type: string
     default: ""
   GITHUB_TOKEN:
-    required: true
+    required: false
     type: string
+    default: ${{ secrets.GITHUB_TOKEN }}
 runs:
   using: composite
   steps:
