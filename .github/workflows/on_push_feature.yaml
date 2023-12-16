@@ -11,7 +11,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Build
-      usus: ./.github/actions/build
+      uses: ./.github/actions/build
       with:
         imagetag: ${{ github.ref_name }}
         platform: ${{ matrix.platforms }}
