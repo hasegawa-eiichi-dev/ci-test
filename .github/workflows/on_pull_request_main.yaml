@@ -5,11 +5,12 @@ on:
 
 jobs:
   dev-call-build:
-    name: call build
+    name: dev call build
     uses: ./.github/workflows/on_workflow_call__build.yaml
     with:
       imagetag: dev
   dev-deploy:
+    name: dev deploy
     runs-on: ubuntu-latest
     steps:
     - run: echo dev deploy
