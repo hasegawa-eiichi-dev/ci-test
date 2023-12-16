@@ -3,8 +3,8 @@ description: Exec nimble test
 runs:
   using: composite
   steps:
-  # - name: Set up Docker Buildx
-  #   uses: docker/setup-buildx-action@v1
+  - name: Set up Docker Buildx
+    uses: docker/setup-buildx-action@v1
   - name: Build and Push Base
     uses: docker/build-push-action@v4
     with:
