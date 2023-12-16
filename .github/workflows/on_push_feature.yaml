@@ -16,11 +16,15 @@ jobs:
         imagetag: ${{ github.ref_name }}
         platform: ${{ matrix.platforms }}
         nim_options: "--stackTrace:on --lineTrace:on --threads:on -x -a"
+      secrets:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # TODO: check advanced option: https://nim-lang.org/docs/nimc.html
         # https://hl4.gitee.io/nim/nimc.html
   nimble-test:
     name: nimble test
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
     - name: Nimble Test
       uses: ./.github/actions/nimble_test
