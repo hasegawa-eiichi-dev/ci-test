@@ -15,11 +15,19 @@ bin           = @["ci_test"]
 
 # Dependencies
 
-requires "nim >= 2.0.0"
-# requires "coco"
+requires "nim >= 2.0.0 & < 3.0.0"
+
+# requires "jester >= 0.6.0 & < 1.0.0"
+# requires "jester2swagger >= 0.1.0 & 1.0.0"
+# requires "coco"  # requires nim (>= 1.0.0 & < 2.0.0)
 
 
 # Tasks
+    # actionNil, actionRefresh, actionInit, actionDump, actionPublish,
+    # actionInstall, actionSearch, actionList, actionBuild, actionPath,
+    # actionUninstall, actionCompile, actionDoc, actionCustom, actionTasks,
+    # actionDevelop, actionCheck, actionLock, actionRun, actionSync, actionSetup,
+    # actionClean, actionDeps
 
 # task help, "List all the available NimScript tasks along with their docstrings.":
 #   echo "TODO"

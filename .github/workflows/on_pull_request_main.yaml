@@ -4,22 +4,52 @@ on:
     - main
 
 jobs:
-  dev-call-build:
-    name: dev call build
-    uses: ./.github/workflows/on_workflow_call__build.yaml
-    with:
-      imagetag: dev
-  dev-deploy:
-    name: dev deploy
+  dev-build:
+    name: DEV Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+        - linux/amd64
+        - linux/arm64
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      uses: ./.github/actions/build
+      with:
+        imagetag: dev
+        platform: ${{ matrix.platforms }}
+        nim_options: "--stackTrace:on --lineTrace:on --threads:on -x -a"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dev-nimble-test:
+    name: DEV Nimble Test
     runs-on: ubuntu-latest
     steps:
-    - run: echo dev deploy
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Nimble Test
+      uses: ./.github/actions/nimble_test
+  dev-deploy:
+    name: DEV Deploy
+    runs-on: ubuntu-latest
     needs:
-    - dev-call-build
+    - dev-build
+    - dev-nimble-test
+    steps:
+    - name: Deploy
+      uses: ./.github/actions/deploy
+      with:
+        imagetag: dev
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   dev-system-test:
-    name: dev system test
-    uses: ./.github/workflows/on_workflow_call__system_test.yaml
-    with:
-      imagetag: dev
+    name: DEV System Test
+    runs-on: ubuntu-latest
     needs:
     - dev-deploy
+    steps:
+    - name: System Test
+      uses: ./.github/actions/system_test
+      with:
+        imagetag: dev
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

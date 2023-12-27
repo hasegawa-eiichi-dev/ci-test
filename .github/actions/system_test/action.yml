@@ -1,0 +1,12 @@
+name: System Test
+description: System Test
+inputs:
+  imagetag:
+    required: true
+    type: string
+runs:
+  using: composite
+  steps:
+  - name: System Test
+    run: echo ${{ inputs.imagetag }} System Test
+    shell: sh

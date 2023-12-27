@@ -1,7 +1,10 @@
+# bin/
+docs/developer/
 nimcache/
 testresults/
 testresults.html
 outputGotten.txt
 outputExpected.txt
-tests/megatest
+tests/**
+!tests/**.*
 tests/megatest.nim

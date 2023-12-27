@@ -4,21 +4,52 @@ on:
     - main
 
 jobs:
-  stg-call-build:
-    name: call build
-    uses: ./.github/workflows/on_workflow_call__build.yaml
-    with:
-      imagetag: stg
-  stg-deploy:
+  stg-build:
+    name: STG Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+        - linux/amd64
+        - linux/arm64
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      uses: ./.github/actions/build
+      with:
+        imagetag: stg
+        platform: ${{ matrix.platforms }}
+        nim_options: "-d:release"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  stg-nimble-test:
+    name: STG Nimble Test
     runs-on: ubuntu-latest
     steps:
-    - run: echo stg deploy
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Nimble Test
+      uses: ./.github/actions/nimble_test
+  stg-deploy:
+    name: STG Deploy
+    runs-on: ubuntu-latest
     needs:
-    - stg-call-build
+    - stg-build
+    - stg-nimble-test
+    steps:
+    - name: Deploy
+      uses: ./.github/actions/deploy
+      with:
+        imagetag: stg
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   stg-system-test:
-    name: stg system test
-    uses: ./.github/workflows/on_workflow_call__system_test.yaml
-    with:
-      imagetag: stg
+    name: STG System Test
+    runs-on: ubuntu-latest
     needs:
     - stg-deploy
+    steps:
+    - name: System Test
+      uses: ./.github/actions/system_test
+      with:
+        imagetag: stg
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
