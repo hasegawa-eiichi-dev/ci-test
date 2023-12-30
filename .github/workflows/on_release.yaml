@@ -20,7 +20,7 @@ jobs:
       with:
         imagetag: ${{ github.ref_name }}
         platform: ${{ matrix.platforms }}
-        nim_options: "-d:release"
+        build_env: prd
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   prd-nimble-test:
     name: PRD Nimble Test

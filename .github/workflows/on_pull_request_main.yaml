@@ -20,7 +20,7 @@ jobs:
       with:
         imagetag: dev
         platform: ${{ matrix.platforms }}
-        nim_options: "--stackTrace:on --lineTrace:on --threads:on -x -a"
+        build_env: dev
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   dev-nimble-test:
     name: DEV Nimble Test

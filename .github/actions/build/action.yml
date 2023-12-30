@@ -10,8 +10,8 @@ inputs:
   GITHUB_TOKEN:
     required: true
     type: string
-  nim_options:
-    required: false
+  build_env:
+    required: true
     type: string
     default: ""
 runs:
@@ -33,7 +33,7 @@ runs:
       context: .
       target: product
       build-args: |
-        nim_options=${{ inputs.nim_options }}
+        build_env=${{ inputs.build_env }}
       tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
       platforms: ${{ inputs.platform }}
       cache-from: |

@@ -8,3 +8,5 @@ outputExpected.txt
 tests/**
 !tests/**.*
 tests/megatest.nim
+nimble.develop
+nimble.paths

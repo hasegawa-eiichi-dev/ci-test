@@ -20,7 +20,7 @@ jobs:
       with:
         imagetag: stg
         platform: ${{ matrix.platforms }}
-        nim_options: "-d:release"
+        build_env: stg
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   stg-nimble-test:
     name: STG Nimble Test
