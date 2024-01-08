@@ -1,0 +1,15 @@
+name: Deploy
+description: Deploy
+inputs:
+  imagetag:
+    required: true
+    type: string
+  GITHUB_TOKEN:
+    required: true
+    type: string
+runs:
+  using: composite
+  steps:
+    - name: Deploy
+      run: echo ${{ inputs.imagetag }} Deploy
+      shell: sh

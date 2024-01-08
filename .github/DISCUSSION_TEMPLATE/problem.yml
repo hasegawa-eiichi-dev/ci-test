@@ -1,0 +1,56 @@
+title: "[Problem] "
+labels: ["problem"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please briefly describe the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please describe the steps to reproduce
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Please describe expected behavior
+      placeholder: |
+        1. foo
+        2. bar
+        3. ...
+    validations:
+      required: false
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Please describe actual behavior
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please describe the execution environment.
+      placeholder: |
+        - cpu:
+        - storage:
+        - os:
+        - software version:
+        - ...
+    validations:
+      required: false
+  - type: textarea
+    id: Addition
+    attributes:
+      label: Additional Context
+      description: Additional context
+      placeholder: Add any other context or screenshots about the problem here.
+    validations:
+      required: false

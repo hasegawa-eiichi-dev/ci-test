@@ -1,0 +1,59 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dev-build:
+    name: DEV Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+        - linux/amd64
+        - linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          imagetag: dev
+          platform: ${{ matrix.platforms }}
+          build_env: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dev-nimble-test:
+    name: DEV Nimble Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Nimble Test
+        uses: ./.github/actions/nimble_test
+  dev-deploy:
+    name: DEV Deploy
+    runs-on: ubuntu-latest
+    needs:
+      - dev-build
+      - dev-nimble-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          imagetag: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dev-system-test:
+    name: DEV System Test
+    runs-on: ubuntu-latest
+    needs:
+      - dev-deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: System Test
+        uses: ./.github/actions/system_test
+        with:
+          imagetag: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
