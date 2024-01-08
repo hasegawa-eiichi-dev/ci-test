@@ -1,0 +1,34 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug] "
+labels: ["bug", "triage"]
+# projects: ["octo-org/1", "octo-org/44"]
+assignees:
+  - octocat
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: discussions
+    attributes:
+      label: Discussions
+      description: Please list relevant discussions if exists.
+      placeholder: |
+        - \#0
+    validations:
+      required: false
+  - type: textarea
+    id: happening
+    attributes:
+      label: Happening
+      description: Please describe what happened.
+    validations:
+      required: true
+  - type: textarea
+    id: cause
+    attributes:
+      label: Cause
+      description: Please describe the cause if you know.
+    validations:
+      required: true
