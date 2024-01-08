@@ -17,28 +17,28 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Set up QEMU
-    uses: docker/setup-qemu-action@v2
-  - name: Set up Docker Buildx
-    uses: docker/setup-buildx-action@v1
-  - name: Login to GHCR
-    uses: docker/login-action@v3
-    with:
-      registry: ghcr.io
-      username: ${{ github.repository_owner }}
-      password: ${{ inputs.GITHUB_TOKEN }}
-  - name: Build and Push
-    uses: docker/build-push-action@v4
-    with:
-      context: .
-      target: product
-      build-args: |
-        build_env=${{ inputs.build_env }}
-      tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
-      platforms: ${{ inputs.platform }}
-      cache-from: |
-        type=gha,scope=ci-test-${{ inputs.imagetag }}-${{ inputs.platform }}
-        type=gha,scope=ci-test-main-${{ inputs.platform }}
-        type=registry,ref=ghcr.io/${{ github.repository_owner }}/ci-test
-      cache-to: type=gha,mode=max,scope=ci-test-${{ inputs.imagetag }}-${{ inputs.platform }}
-      push: true
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ inputs.GITHUB_TOKEN }}
+    - name: Build and Push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        target: product
+        build-args: |
+          build_env=${{ inputs.build_env }}
+        tags: ghcr.io/${{ github.repository_owner }}/ci-test:${{ inputs.imagetag }}
+        platforms: ${{ inputs.platform }}
+        cache-from: |
+          type=gha,scope=ci-test-${{ inputs.imagetag }}-${{ inputs.platform }}
+          type=gha,scope=ci-test-main-${{ inputs.platform }}
+          type=registry,ref=ghcr.io/${{ github.repository_owner }}/ci-test
+        cache-to: type=gha,mode=max,scope=ci-test-${{ inputs.imagetag }}-${{ inputs.platform }}
+        push: true

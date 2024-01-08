@@ -10,6 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Deploy
-    run: echo ${{ inputs.imagetag }} Deploy
-    shell: sh
+    - name: Deploy
+      run: echo ${{ inputs.imagetag }} Deploy
+      shell: sh
