@@ -12,6 +12,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
+        git fetch --unshallow
         for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number")
         do
           git fetch origin refs/pull/${pr_num}/merge:refs/remotes/origin/pull/${pr_num}
