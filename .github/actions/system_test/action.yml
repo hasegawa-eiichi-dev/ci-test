@@ -8,5 +8,5 @@ runs:
   using: composite
   steps:
     - name: System Test
-      run: echo ${{ inputs.imagetag }} System Test
       shell: sh
+      run: echo ${{ inputs.imagetag }} System Test
