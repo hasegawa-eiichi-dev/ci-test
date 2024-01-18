@@ -1,0 +1,13 @@
+name: Merge Pull Requests
+description: Merge all pull requests
+runs:
+  using: composite
+  steps:
+    - name: Merge pull requests
+      shell: sh
+      run: |
+        for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number")
+        do
+          git fetch origin refs/pull/$${pr_num}/merge:refs/remotes/origin/pull/$${pr_num}
+        done
+        git merge $(git branch -r --list origin/pull/*)
