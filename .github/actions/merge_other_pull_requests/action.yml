@@ -1,5 +1,9 @@
 name: Merge Pull Requests
 description: Merge all pull requests
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    type: string
 runs:
   using: composite
   steps:
