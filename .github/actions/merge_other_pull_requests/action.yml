@@ -9,6 +9,8 @@ runs:
   steps:
     - name: Merge pull requests
       shell: sh
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
         for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number")
         do
