@@ -12,11 +12,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       run: |
-        gh pr list --search "draft:false"  --jq ".[]"
+        gh pr list --search "draft:false" --json baseRefName,headRefName,headRefOid --jq ".[]"
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git fetch --unshallow origin HEAD
-        for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number" | sort)
-        do
-          git pull --no-rebase origin refs/pull/${pr_num}/merge
-        done
+        gh pr list --search "draft:false" --json number --jq ".[].number" | sort | xargs -i git pull --no-rebase origin refs/pull/{}/merge
