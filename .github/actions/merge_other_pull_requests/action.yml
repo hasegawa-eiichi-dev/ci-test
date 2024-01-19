@@ -14,7 +14,13 @@ runs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git fetch --unshallow origin $(git branch -a)
+        echo =====
+        git branch --show-current
+        echo =====
+        git branch -a
+        echo =====
+        git fetch --unshallow origin $()
+        echo =====
         for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number")
         do
           git pull --no-rebase origin refs/pull/${pr_num}/merge
