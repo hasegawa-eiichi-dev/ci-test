@@ -19,9 +19,9 @@ runs:
         echo =====
         git branch -a
         echo =====
-        git fetch --unshallow origin $()
+        # git fetch --unshallow origin $()
         echo =====
-        for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number")
+        for pr_num in $(gh pr list --search "draft:false" --json number --jq ".[].number" | sort)
         do
           git pull --no-rebase origin refs/pull/${pr_num}/merge
         done
