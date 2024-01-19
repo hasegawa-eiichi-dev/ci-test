@@ -15,4 +15,4 @@ runs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git fetch --unshallow origin HEAD
-        gh pr list --search "draft:false" --json number --jq ".[].number | sort" | xargs -i git pull --no-rebase origin refs/pull/{}/merge
+        gh pr list --search "draft:false" --json number --jq ".[].number" | sort -n | xargs -i git pull --no-rebase origin refs/pull/{}/merge
