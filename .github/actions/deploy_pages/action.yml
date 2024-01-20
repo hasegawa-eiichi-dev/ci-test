@@ -1,0 +1,29 @@
+name: Deploy Pages
+description: Deploy GitHub Pages
+runs:
+  using: composite
+  steps:
+    - name: Build Base
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        target: base
+        tags: ci-test-base
+        cache-from: type=gha,scope=ci-test-base
+        cache-to: type=gha,mode=max,scope=ci-test-base
+        load: true
+    - name: Nimble Doc2
+      shell: sh
+      run: docker run --rm ci-test-base nimble doc2 -o:docs/developer src/ci_test.nim
+    - name: Fix Permissions
+      run: |
+        chmod -c -R +rX docs | while read line; do
+          echo "::warning title=Invalid file permissions automatically fixed::$line"
+        done
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: docs
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
