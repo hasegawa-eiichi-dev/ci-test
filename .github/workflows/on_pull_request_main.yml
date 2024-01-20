@@ -43,6 +43,8 @@ jobs:
   dev-deploy-pages:
     name: DEV Deploy Pages
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
     if: github.event.pull_request.draft == false
     steps:
       - name: Checkout
