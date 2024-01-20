@@ -6,7 +6,7 @@ runs:
     - name: Fix Permissions
       shell: sh
       run: |
-        chmod -c -R +rX docs | while read line; do
+        sudo chmod -c -R +rX docs | while read line; do
           echo "::warning title=Invalid file permissions automatically fixed::$line"
         done
     - name: Upload Pages Artifact
