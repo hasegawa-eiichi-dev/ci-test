@@ -45,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pages: write
+      id-token: write
     if: github.event.pull_request.draft == false
     steps:
       - name: Checkout
