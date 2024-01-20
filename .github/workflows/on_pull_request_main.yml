@@ -58,7 +58,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - dev-build
-      - dev-nimble-test
     if: github.event.pull_request.draft == false
     steps:
       - name: Checkout
