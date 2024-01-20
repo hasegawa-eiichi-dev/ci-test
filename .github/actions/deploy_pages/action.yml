@@ -18,6 +18,7 @@ runs:
       shell: sh
       run: docker run --rm ci-test-base nimble doc2 -o:docs/developer src/ci_test.nim
     - name: Fix Permissions
+      shell: sh
       run: |
         chmod -c -R +rX docs | while read line; do
           echo "::warning title=Invalid file permissions automatically fixed::$line"
