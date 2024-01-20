@@ -16,7 +16,7 @@ runs:
         load: true
     - name: Nimble Doc2
       shell: sh
-      run: docker run --rm ci-test-base nimble doc2 -o:docs/developer src/ci_test.nim
+      run: docker run --rm -v $(pwd)/docs:/ci-test/docs ci-test-base nimble doc2 -o:docs/developer src/ci_test.nim
     - name: Fix Permissions
       shell: sh
       run: |
