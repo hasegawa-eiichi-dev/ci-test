@@ -40,6 +40,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Nimble Test
         uses: ./.github/actions/nimble_test
+  dev-deploy-pages:
+    name: DEV Deploy Pages
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy Pages
+        uses: ./.github/actions/deploy_pages
   dev-deploy:
     name: DEV Deploy
     runs-on: ubuntu-latest
