@@ -1,0 +1,95 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dev-build:
+    name: DEV Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          imagetag: dev
+          platform: ${{ matrix.platforms }}
+          build_env: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dev-nimble-test:
+    name: DEV Nimble Test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Nimble Test
+        uses: ./.github/actions/nimble_test
+  dev-build-pages:
+    name: DEV Build Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Pages
+        uses: ./.github/actions/build_pages
+  dev-deploy:
+    name: DEV Deploy
+    runs-on: ubuntu-latest
+    needs:
+      - dev-build
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          imagetag: dev
+          env: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  dev-system-test:
+    name: DEV System Test
+    runs-on: ubuntu-latest
+    needs:
+      - dev-deploy
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Merge Other Pull Requests
+        uses: ./.github/actions/merge_other_pull_requests
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: System Test
+        uses: ./.github/actions/system_test
+        with:
+          env: dev
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

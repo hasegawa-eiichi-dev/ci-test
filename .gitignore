@@ -1,0 +1,12 @@
+bin/
+docs/developer/
+nimcache/
+testresults/
+testresults.html
+outputGotten.txt
+outputExpected.txt
+tests/**
+!tests/**.*
+tests/megatest.nim
+nimble.develop
+nimble.paths

@@ -1,0 +1,2 @@
+proc greet*() =
+  echo "hello"

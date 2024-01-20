@@ -1,0 +1,18 @@
+name: Merge Pull Requests
+description: Merge all pull requests
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    type: string
+runs:
+  using: composite
+  steps:
+    - name: Merge pull requests
+      shell: sh
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git fetch --unshallow origin HEAD
+        gh pr list --search "draft:false" --json number --jq ".[].number" | sort -n | xargs -i git pull --no-rebase origin refs/pull/{}/merge

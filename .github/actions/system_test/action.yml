@@ -1,0 +1,12 @@
+name: System Test
+description: System Test
+inputs:
+  env:
+    required: true
+    type: string
+runs:
+  using: composite
+  steps:
+    - name: System Test
+      shell: sh
+      run: echo ${{ inputs.env }} System Test

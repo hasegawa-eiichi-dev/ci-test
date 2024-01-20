@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - feature-*
+
+jobs:
+  feature-build:
+    name: Feature Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          imagetag: ${{ github.ref_name }}
+          platform: ${{ matrix.platforms }}
+          build_env: feature
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  feature-nimble-test:
+    name: Feature Nimble Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Nimble Test
+        uses: ./.github/actions/nimble_test
+  feature-build-pages:
+    name: Feature Build Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Pages
+        uses: ./.github/actions/build_pages

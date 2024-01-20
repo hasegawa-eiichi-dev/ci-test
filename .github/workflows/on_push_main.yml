@@ -1,0 +1,72 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  stg-build:
+    name: STG Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          imagetag: stg
+          platform: ${{ matrix.platforms }}
+          build_env: stg
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  stg-nimble-test:
+    name: STG Nimble Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Nimble Test
+        uses: ./.github/actions/nimble_test
+  stg-build-pages:
+    name: STG Build Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Pages
+        uses: ./.github/actions/build_pages
+  stg-deploy:
+    name: STG Deploy
+    runs-on: ubuntu-latest
+    needs:
+      - stg-build
+      - stg-build-pages
+      - stg-nimble-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          imagetag: stg
+          env: stg
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  stg-system-test:
+    name: STG System Test
+    runs-on: ubuntu-latest
+    needs:
+      - stg-deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: System Test
+        uses: ./.github/actions/system_test
+        with:
+          env: stg
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

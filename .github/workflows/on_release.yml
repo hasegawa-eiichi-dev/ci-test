@@ -1,0 +1,61 @@
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  prd-build:
+    name: PRD Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          imagetag: ${{ github.ref_name }}
+          platform: ${{ matrix.platforms }}
+          build_env: prd
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  prd-nimble-test:
+    name: PRD Nimble Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Nimble Test
+        uses: ./.github/actions/nimble_test
+  prd-deploy-pages:
+    name: PRD Deploy Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Pages
+        uses: ./.github/actions/build_pages
+      - name: Deploy Pages
+        uses: ./.github/actions/deploy_pages
+  prd-deploy:
+    name: PRD Deploy
+    runs-on: ubuntu-latest
+    needs:
+      - prd-build
+      - prd-deploy-pages
+      - prd-nimble-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          imagetag: ${{ github.ref_name }}
+          env: prd
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
