@@ -22,8 +22,6 @@ jobs:
           platform: ${{ matrix.platforms }}
           build_env: feature
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # TODO: check advanced option: https://nim-lang.org/docs/nimc.html
-          # https://hl4.gitee.io/nim/nimc.html
   feature-nimble-test:
     name: Feature Nimble Test
     runs-on: ubuntu-latest
@@ -32,3 +30,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Nimble Test
         uses: ./.github/actions/nimble_test
+  feature-build-pages:
+    name: Feature Build Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Pages
+        uses: ./.github/actions/build_pages

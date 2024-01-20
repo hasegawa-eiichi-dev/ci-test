@@ -1,7 +1,7 @@
 name: System Test
 description: System Test
 inputs:
-  imagetag:
+  env:
     required: true
     type: string
 runs:
@@ -9,4 +9,4 @@ runs:
   steps:
     - name: System Test
       shell: sh
-      run: echo ${{ inputs.imagetag }} System Test
+      run: echo ${{ inputs.env }} System Test

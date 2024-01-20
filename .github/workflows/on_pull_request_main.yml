@@ -40,8 +40,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Nimble Test
         uses: ./.github/actions/nimble_test
-  dev-deploy-pages:
-    name: DEV Deploy Pages
+  dev-build-pages:
+    name: DEV Build Pages
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -54,8 +54,8 @@ jobs:
         uses: ./.github/actions/merge_other_pull_requests
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy Pages
-        uses: ./.github/actions/deploy_pages
+      - name: Build Pages
+        uses: ./.github/actions/build_pages
   dev-deploy:
     name: DEV Deploy
     runs-on: ubuntu-latest
@@ -73,6 +73,7 @@ jobs:
         uses: ./.github/actions/deploy
         with:
           imagetag: dev
+          env: dev
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   dev-system-test:
     name: DEV System Test
@@ -90,5 +91,5 @@ jobs:
       - name: System Test
         uses: ./.github/actions/system_test
         with:
-          imagetag: dev
+          env: dev
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

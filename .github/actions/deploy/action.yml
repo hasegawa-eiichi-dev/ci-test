@@ -4,6 +4,9 @@ inputs:
   imagetag:
     required: true
     type: string
+  env:
+    required: true
+    type: string
   GITHUB_TOKEN:
     required: true
     type: string
@@ -12,4 +15,4 @@ runs:
   steps:
     - name: Deploy
       shell: sh
-      run: echo ${{ inputs.imagetag }} Deploy
+      run: echo ${{ inputs.env }} Deploy
