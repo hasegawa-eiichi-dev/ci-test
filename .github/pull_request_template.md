@@ -7,13 +7,16 @@ Please delete options that are not relevant.
 - [ ] Non-destructive change
 - [ ] Destructive change (fix or feature that would cause existing functionality to not work as expected)
 
+## Relevant issues
+<!-- ex.
+- resolve #1
+-->
+- 
+
 ## Purpose
 - 
 
 ## Changes
-- 
-
-## Relevant issues
 - 
 
 ## Checklist

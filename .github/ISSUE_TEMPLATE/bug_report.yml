@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug] "
-labels: ["bug", "triage"]
+labels: ["bug"]
 # projects: ["octo-org/1", "octo-org/44"]
 assignees:
   - octocat
@@ -15,20 +15,57 @@ body:
       label: Discussions
       description: Please list relevant discussions if exists.
       placeholder: |
-        - \#0
+        - #0
     validations:
       required: false
   - type: textarea
-    id: happening
+    id: description
     attributes:
-      label: Happening
-      description: Please describe what happened.
+      label: Description
+      description: Please briefly describe the problem
     validations:
       required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please describe the steps to reproduce
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Please describe expected behavior
+      placeholder: |
+        1. foo
+        2. bar
+        3. ...
+    validations:
+      required: false
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Please describe actual behavior
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please describe the execution environment.
+      placeholder: |
+        - cpu arch:
+        - os:
+        - software version:
+        - etc.
+    validations:
+      required: false
   - type: textarea
     id: cause
     attributes:
       label: Cause
-      description: Please describe the cause if you know.
+      description: If you have any ideas of the cause, please let us know
     validations:
-      required: true
+      required: false
