@@ -1,7 +1,0 @@
-title: "[Request] "
-labels: ["request"]
-body:
-  - type: textarea
-    id: request
-    validations:
-      required: true

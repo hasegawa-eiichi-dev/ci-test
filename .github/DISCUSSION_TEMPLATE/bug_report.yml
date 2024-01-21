@@ -1,11 +1,14 @@
-title: "[Problem] "
-labels: ["problem"]
+title: "[Bug] "
+labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to fill out this bug report!
   - type: textarea
     id: description
     attributes:
       label: Description
-      description: Please briefly describe the problem.
+      description: Please briefly describe the problem
     validations:
       required: true
   - type: textarea
@@ -39,18 +42,16 @@ body:
       label: Environment
       description: Please describe the execution environment.
       placeholder: |
-        - cpu:
-        - storage:
+        - cpu arch:
         - os:
         - software version:
-        - ...
+        - etc.
     validations:
       required: false
   - type: textarea
-    id: Addition
+    id: cause
     attributes:
-      label: Additional Context
-      description: Additional context
-      placeholder: Add any other context or screenshots about the problem here.
+      label: Cause
+      description: Please describe the cause if you know
     validations:
       required: false
