@@ -67,6 +67,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          target: build
           build-args: |
             build_env=${{ needs.set-vars.outputs.build_env }}
           tags: ${{ needs.set-vars.outputs.tags }}
