@@ -120,6 +120,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
     steps:
-      - name: Nimble Test
+      - name: System Test
         shell: sh
         run: echo system test
