@@ -20,34 +20,9 @@ jobs:
           tags: |
             type=ref,event=pr
             type=ref,event=branch
-  build-base-image:
-    name: Build Base Image
-    runs-on: ubuntu-latest
-    needs:
-      - set-vars
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Build
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          target: base
-          tags: ${{ needs.set-vars.outputs.tags }}-base
-          cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}-base
-          cache-to: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}-base
   build-image:
     name: Build Image
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platforms:
-          - linux/amd64
-          - linux/arm64
     needs:
       - set-vars
     steps:
@@ -73,12 +48,12 @@ jobs:
           tags: ${{ needs.set-vars.outputs.tags }}
           labels: ${{ needs.set-vars.outputs.labels }}
           annotations: ${{ needs.set-vars.outputs.annotations }}
-          platforms: ${{ matrix.platforms }}
+          platforms: linux/amd64,linux/arm64
           cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}-${{ matrix.platforms }}
+            type=gha,scope=${{ needs.set-vars.outputs.tags }}
             type=registry,ref=${{ needs.set-vars.outputs.tags }}
           cache-to: |
-            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}-${{ matrix.platforms }}
+            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}
           push: true
           sbom: true
           provenance: true
@@ -87,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - set-vars
-      - build-base-image
+      - build-image
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -112,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - set-vars
-      - build-base-image
+      - build-image
     steps:
       - name: Checkout
         uses: actions/checkout@v4
