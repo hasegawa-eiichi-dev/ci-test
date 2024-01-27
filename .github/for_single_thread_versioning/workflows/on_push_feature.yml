@@ -20,7 +20,7 @@ jobs:
         with:
           imagetag: ${{ github.ref_name }}
           platform: ${{ matrix.platforms }}
-          build_env: feature
+          build_env: dev
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   feature-nimble-test:
     name: Feature Nimble Test
