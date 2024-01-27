@@ -10,8 +10,7 @@ COPY . .
 FROM base AS build
 ARG build_env
 RUN nimble -y install -p:"-d:${build_env}"
-ENTRYPOINT /ci-test/bin
 
-# FROM scratch
-# COPY --from=build /ci-test/bin /bin
-# ENTRYPOINT /bin/ci_test
+FROM scratch
+COPY --from=build /ci-test/bin /bin
+ENTRYPOINT /bin/ci_test
