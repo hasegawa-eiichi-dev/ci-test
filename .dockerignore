@@ -1,4 +1,5 @@
-# bin/
+.git/
+.github/
 docs/developer/
 nimcache/
 testresults/

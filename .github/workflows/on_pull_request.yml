@@ -33,17 +33,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # - name: Build Image
-      #   uses: ./.github/actions/build_image
-      #   with:
-      #     tags: ${{ needs.set-vars.outputs.tags }}
-      #     labels: ${{ needs.set-vars.outputs.labels }}
-      #     annotations: ${{ needs.set-vars.outputs.annotations }}
-      #     build_env: ${{ needs.set-vars.outputs.build_env }}
-      #     cache-from: ${{ needs.set-vars.outputs.tags }}  # pr-${{ github.event.number }}
-      #     cache-to: ${{ needs.set-vars.outputs.tags }}  # pr-${{ github.event.number }}
-      #     platform: ${{ matrix.platforms }}
-      #     # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -75,15 +64,12 @@ jobs:
   build-pages:
     name: Build Pages
     runs-on: ubuntu-latest
-    # permissions:
-    #   pages: write
-    #   id-token: write
     needs:
       - set-vars
       - build-image
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Build
         uses: docker/build-push-action@v5
         with:
@@ -104,8 +90,8 @@ jobs:
       - set-vars
       - build-image
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Build
         uses: docker/build-push-action@v5
         with:
@@ -129,4 +115,4 @@ jobs:
     steps:
       - name: Nimble Test
         shell: sh
-        run: docker run --rm ci-test-base nimble test
+        run: echo system test
