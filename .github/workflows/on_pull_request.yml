@@ -1,0 +1,130 @@
+on:
+  - pull_request
+  - push  # test
+
+jobs:
+  set-vars:
+    name: Set Vars
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
+      annotations: ${{ steps.meta.outputs.annotations }}
+      build_env: dev
+    steps:
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/ci-test
+          tags: type=ref,event=pr
+  build-image:
+    name: Build Image
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+    needs:
+      - set-vars
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v4
+      # - name: Build Image
+      #   uses: ./.github/actions/build_image
+      #   with:
+      #     tags: ${{ needs.set-vars.outputs.tags }}
+      #     labels: ${{ needs.set-vars.outputs.labels }}
+      #     annotations: ${{ needs.set-vars.outputs.annotations }}
+      #     build_env: ${{ needs.set-vars.outputs.build_env }}
+      #     cache-from: ${{ needs.set-vars.outputs.tags }}  # pr-${{ github.event.number }}
+      #     cache-to: ${{ needs.set-vars.outputs.tags }}  # pr-${{ github.event.number }}
+      #     platform: ${{ matrix.platforms }}
+      #     # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      # - name: Login to GHCR
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ github.token }}
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          build-args: |
+            build_env=${{ needs.set-vars.outputs.build_env }}
+          tags: ${{ needs.set-vars.outputs.tags }}
+          labels: ${{ needs.set-vars.outputs.labels }}
+          annotations: ${{ needs.set-vars.outputs.annotations }}
+          platforms: ${{ matrix.platforms }}
+          cache-from: |
+            type=gha,scope=${{ needs.set-vars.outputs.tags }}-${{ matrix.platforms }}
+            type=registry,ref=${{ needs.set-vars.outputs.tags }}
+          cache-to: |
+            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}-${{ matrix.platforms }}
+          push: true
+          sbom: true
+          provenance: true
+  build-pages:
+    name: Build Pages
+    runs-on: ubuntu-latest
+    # permissions:
+    #   pages: write
+    #   id-token: write
+    needs:
+      - set-vars
+      - build-image
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v4
+      - name: Build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: base
+          cache-from: |
+            type=gha,scope=${{ needs.set-vars.outputs.tags }}
+          load: true
+      - name: Nimble Doc2
+        shell: sh
+        run: |
+          docker run --rm -v $(pwd)/docs:/ci-test/docs ci-test-base nimble doc2 -o:docs/developer src/ci_test.nim
+          find docs -name *.idx | xargs sudo rm
+  nimble-test:
+    name: Nimble Test
+    runs-on: ubuntu-latest
+    needs:
+      - set-vars
+      - build-image
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v4
+      - name: Build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: base
+          cache-from: |
+            type=gha,scope=${{ needs.set-vars.outputs.tags }}
+          load: true
+      - name: Nimble Test
+        shell: sh
+        run: docker run --rm ci-test-base nimble test
+  system-test:
+    name: System Test
+    runs-on: ubuntu-latest
+    needs:
+      - set-vars
+      - build-image
+    services:
+      ci-test:
+        image: ${{ needs.set-vars.outputs.tags }}
+    steps:
+      - name: Nimble Test
+        shell: sh
+        run: docker run --rm ci-test-base nimble test

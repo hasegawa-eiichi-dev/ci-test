@@ -11,5 +11,5 @@ FROM base AS build
 ARG build_env
 RUN nimble -y install -p:"-d:${build_env}"
 
-FROM scratch AS product
+FROM scratch
 COPY --from=build /ci-test/bin /bin

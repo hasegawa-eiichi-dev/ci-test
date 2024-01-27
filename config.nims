@@ -7,7 +7,7 @@ switch("threads", "on")
 switch("define", "checkAbi")
 
 
-when defined(feature) or defined(dev):
+when defined(dev):
   switch("checks", "on")
   switch("assertions", "on")
   switch("showAllMismatches", "on")
