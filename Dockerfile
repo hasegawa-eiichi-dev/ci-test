@@ -13,3 +13,4 @@ RUN nimble -y install -p:"-d:${build_env}"
 
 FROM scratch
 COPY --from=build /ci-test/bin /bin
+ENTRYPOINT ci_test
