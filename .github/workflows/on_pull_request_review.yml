@@ -1,0 +1,22 @@
+on:
+  pull_request_review:
+    types:
+      - submitted
+
+jobs:
+  call-on-pull-request:
+    name: Call on-pull-request Workflow
+    uses: ./.github/workflows/build_and_test.yml
+    with:
+      build_env: stg
+    if: github.event.review.state == 'APPROVED'
+  dismiss-review:
+    name: Dismiss Review
+    runs-on: ubuntu-latest
+    needs: call-on-pull-request
+    if: failure()
+    steps:
+      - name: Dismiss Review
+        shell: sh
+        run: |
+          gh api --method=PUT -f message="Dismissed due to PR edit." repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews/${{ github.event.review.id }}/dismissals

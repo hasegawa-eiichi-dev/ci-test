@@ -1,0 +1,22 @@
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete-package-versions:
+    name: Delete Package Versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Version ID
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=ref,event=pr
+      - name: Delete Package Versions
+        uses: actions/delete-package-versions@v4
+        with:
+          package-version-ids: ${{ steps.meta.outputs.tags }}
+          package-name: ci-test
+          package-type: container
