@@ -71,28 +71,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -eu
           cat << EOF > DummyDockerfile
             FROM scratch
             COPY dummy /
           EOF
-          touch dummy
+          date -u +%s%N > dummy
           docker build -t ${{ steps.meta.outputs.tags }} -f DummyDockerfile .
           rm DummyDockerfile dummy
           docker push ${{ steps.meta.outputs.tags }}
-          echo tags=$(
-            gh api \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              /user/packages/container/ci-test/versions \
-              --jq ".[]|select(.name==sha=$(docker inspect -f='{{.Id}}' scratch))|.id" \
-          )
+          docker pull ${{ steps.meta.outputs.tags }}
+          id=$(docker inspect -f='{{index .RepoDigests 0}}' ${{ steps.meta.outputs.tags }})
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
           owner: ${{ github.repository_owner }}
           package-name: ci-test
           package-type: container
-          package-version-ids: ${{ steps.retag.outputs.tags }}
+          package-version-ids: ${{ steps.retag.outputs.id }}
       # test
   build-pages:
     name: Build Pages
