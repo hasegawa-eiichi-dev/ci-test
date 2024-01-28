@@ -102,7 +102,7 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               /user/packages/container/ci-test/versions \
-              --jq ".[]|select(.name=='${{ steps.meta2.outputs.tags }}')|.id"
+              --jq '.[]|select(.name=="${{ steps.meta2.outputs.tags }}")|.id'
           ) >> $GITHUB_OUTPUT
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
