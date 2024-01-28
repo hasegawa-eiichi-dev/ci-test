@@ -26,7 +26,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ github.token }}
+          password: ${{ secrets.github_token }}
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
@@ -53,6 +53,7 @@ jobs:
           package-name: ci-test
           package-type: container
           delete-only-untagged-versions: true
+          min-versions-to-keep: 0
   build-pages:
     name: Build Pages
     runs-on: ubuntu-latest
