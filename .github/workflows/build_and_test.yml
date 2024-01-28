@@ -66,7 +66,10 @@ jobs:
           min-versions-to-keep: 0
       # test
       - name: Retag
+        id: retag
         shell: sh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           cat << EOF > DummyDockerfile
             FROM scratch
@@ -76,12 +79,6 @@ jobs:
           docker build -t ${{ steps.meta.outputs.tags }} -f DummyDockerfile .
           rm DummyDockerfile dummy
           docker push ${{ steps.meta.outputs.tags }}
-      - name: Get Version ID
-        id: get-version-id
-        shell: sh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
           echo tags=$(
             gh api \
               -H "Accept: application/vnd.github+json" \
@@ -95,7 +92,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           package-name: ci-test
           package-type: container
-          package-version-ids: ${{ steps.get-version-id.outputs.tags }}
+          package-version-ids: ${{ steps.retag.outputs.tags }}
       # test
   build-pages:
     name: Build Pages
