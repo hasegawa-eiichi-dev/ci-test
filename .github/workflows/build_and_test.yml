@@ -34,15 +34,15 @@ jobs:
           target: build
           build-args: |
             build_env=${{ inputs.build_env }}
-          tags: ${{ needs.set-vars.outputs.tags }}
+          tags: ${{ inputs.tags }}
           # labels: ${{ needs.set-vars.outputs.labels }}
           # annotations: ${{ needs.set-vars.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
           cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}
-            type=registry,ref=${{ needs.set-vars.outputs.tags }}
+            type=gha,scope=${{ inputs.tags }}
+            type=registry,ref=${{ inputs.tags }}
           cache-to: |
-            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}
+            type=gha,mode=max,scope=${{ inputs.tags }}
           push: true
           sbom: true
           provenance: true
@@ -68,14 +68,14 @@ jobs:
         with:
           context: .
           target: base
-          tags: ${{ needs.set-vars.outputs.tags }}-base
+          tags: ${{ inputs.tags }}-base
           cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}
+            type=gha,scope=${{ inputs.tags }}
           load: true
       - name: Nimble Doc2
         shell: sh
         run: |
-          docker run --rm -v $(pwd)/docs:/ci-test/docs ${{ needs.set-vars.outputs.tags }}-base nimble doc2 -o:docs/developer src/ci_test.nim
+          docker run --rm -v $(pwd)/docs:/ci-test/docs ${{ inputs.tags }}-base nimble doc2 -o:docs/developer src/ci_test.nim
           find docs -name *.idx | xargs sudo rm
   nimble-test:
     name: Nimble Test
@@ -92,14 +92,14 @@ jobs:
         with:
           context: .
           target: base
-          tags: ${{ needs.set-vars.outputs.tags }}-base
+          tags: ${{ inputs.tags }}-base
           cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}
+            type=gha,scope=${{ inputs.tags }}
           load: true
       - name: Nimble Test
         shell: sh
         run: |
-          docker run --rm ${{ needs.set-vars.outputs.tags }}-base nimble test
+          docker run --rm ${{ inputs.tags }}-base nimble test
   system-test:
     name: System Test
     runs-on: ubuntu-latest
@@ -107,7 +107,7 @@ jobs:
       - build-image
     services:
       ci-test:
-        image: ${{ needs.set-vars.outputs.tags }}
+        image: ${{ inputs.tags }}
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
