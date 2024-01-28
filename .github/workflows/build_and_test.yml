@@ -120,7 +120,6 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        options: --entrypoint=/bin/ci_test
     steps:
       - name: System Test
         shell: sh
