@@ -45,14 +45,14 @@ jobs:
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          platforms: linux/amd64,linux/arm64
+          # platforms: linux/amd64,linux/arm64
           cache-from: |
             type=gha,scope=${{ steps.meta.outputs.tags }}
             type=registry,ref=${{ steps.meta.outputs.tags }}
           cache-to: |
             type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
           push: true
-          sbom: false
+          sbom: true
           provenance: false  # https://chroju.dev/blog/docker_buildx_slsa_provenance
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
