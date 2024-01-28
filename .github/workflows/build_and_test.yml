@@ -39,21 +39,22 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          target: build
           build-args: |
             build_env=${{ inputs.build_env }}
           tags: |
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          # platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           cache-from: |
             type=gha,scope=${{ steps.meta.outputs.tags }}
             type=registry,ref=${{ steps.meta.outputs.tags }}
           cache-to: |
             type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
           push: true
-          sbom: false
-          provenance: mode=min  # https://chroju.dev/blog/docker_buildx_slsa_provenance
+          sbom: true
+          provenance: mode=max  # https://chroju.dev/blog/docker_buildx_slsa_provenance
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
@@ -120,7 +121,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        options: --entrypoint=/bin/ci_test
+        # options: --entrypoint=/bin/ci_test
     steps:
       - name: System Test
         shell: sh
