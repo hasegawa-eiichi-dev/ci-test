@@ -35,11 +35,30 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{raw}}
             typr=raw,value={{base_ref}}
-      - name: Build and Push
+      - name: Build and Push  # test
         uses: docker/build-push-action@v5
         with:
           context: .
           target: build
+          build-args: |
+            build_env=${{ inputs.build_env }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ci-test:multiple-tag-test
+          # labels: ${{ steps.meta.outputs.labels }}
+          # annotations: ${{ steps.meta.outputs.annotations }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: |
+            type=gha,scope=${{ steps.meta.outputs.tags }}
+            type=registry,ref=${{ steps.meta.outputs.tags }}
+          cache-to: |
+            type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
+          push: true
+          sbom: true
+          provenance: true
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
           build-args: |
             build_env=${{ inputs.build_env }}
           tags: |
@@ -69,6 +88,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           tags: |
+            type=ref,event=branch
             type=ref,event=pr
       - name: Get Version ID
         id: get-version-id
