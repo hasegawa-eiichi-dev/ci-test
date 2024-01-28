@@ -54,6 +54,7 @@ jobs:
           push: true
           sbom: true
           provenance: true  # https://chroju.dev/blog/docker_buildx_slsa_provenance
+          no-cache: true
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
