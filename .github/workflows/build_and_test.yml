@@ -45,8 +45,8 @@ jobs:
           tags: |
             ${{ steps.meta.outputs.tags }}
             ghcr.io/${{ github.repository_owner }}/ci-test:multiple-tag-test
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
+          # labels: ${{ steps.meta.outputs.labels }}
+          # annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
           cache-from: |
             type=gha,scope=${{ steps.meta.outputs.tags }}
@@ -65,30 +65,33 @@ jobs:
           delete-only-untagged-versions: true
           min-versions-to-keep: 0
       # test
-      - name: Retag
-        id: retag
+      - name: Docker Metadata Action
+        id: meta2
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=ref,event=pr
+      - name: Get Version ID
+        id: get-version-id
         shell: sh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
-          cat << EOF > DummyDockerfile
-            FROM scratch
-            COPY dummy /
-          EOF
-          date -u +%s%N > dummy
-          docker build -t ${{ steps.meta.outputs.tags }} -f DummyDockerfile .
-          rm DummyDockerfile dummy
-          docker push ${{ steps.meta.outputs.tags }}
-          docker pull ${{ steps.meta.outputs.tags }}
-          id=$(docker inspect -f='{{index .RepoDigests 0}}' ${{ steps.meta.outputs.tags }})
+          echo id=$(
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /user/packages/container/ci-test/versions \
+              --jq '.[]|select(.name==${{ steps.meta2.outputs.tags }})|.id'
+          ) >> $GITHUB_OUTPUT
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
           owner: ${{ github.repository_owner }}
           package-name: ci-test
           package-type: container
-          package-version-ids: ${{ steps.retag.outputs.id }}
+          package-version-ids: ${{ steps.get-version-id.outputs.id }}
       # test
   build-pages:
     name: Build Pages
