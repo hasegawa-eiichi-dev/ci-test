@@ -7,29 +7,9 @@ on:
         type: string
 
 jobs:
-  set-vars:
-    name: Set Vars
-    runs-on: ubuntu-latest
-    outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-      labels: ${{ steps.meta.outputs.labels }}
-      annotations: ${{ steps.meta.outputs.annotations }}
-    steps:
-      - name: Docker Metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/ci-test
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{raw}}
-            typr=raw,value={{base_ref}}
   build-image:
     name: Build Image
     runs-on: ubuntu-latest
-    needs:
-      - set-vars
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
     steps:
@@ -45,6 +25,16 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/ci-test
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{raw}}
+            typr=raw,value={{base_ref}}
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
@@ -53,16 +43,16 @@ jobs:
           build-args: |
             build_env=${{ inputs.build_env }}
           tags: |
-            ${{ needs.set-vars.outputs.tags }}
+            ${{ steps.meta.outputs.tags }}
             ghcr.io/${{ github.repository_owner }}/ci-test:multiple-tag-test
-          labels: ${{ needs.set-vars.outputs.labels }}
-          annotations: ${{ needs.set-vars.outputs.annotations }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
           cache-from: |
-            type=gha,scope=${{ needs.set-vars.outputs.tags }}
-            type=registry,ref=${{ needs.set-vars.outputs.tags }}
+            type=gha,scope=${{ steps.meta.outputs.tags }}
+            type=registry,ref=${{ steps.meta.outputs.tags }}
           cache-to: |
-            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}
+            type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
           push: true
           sbom: true
           provenance: true
@@ -75,25 +65,30 @@ jobs:
           delete-only-untagged-versions: true
           min-versions-to-keep: 0
       # test
-      - name: Docker Metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{raw}}
-            typr=raw,value={{base_ref}}
+      - name: Retag
+        shell: sh
+        run: |
+          cat << EOF > DummyDockerfile
+            FROM scratch
+            COPY dummy /
+          EOF
+          touch dummy
+          docker build -t ${{ steps.meta.outputs.tags }} -f DummyDockerfile .
+          rm DummyDockerfile dummy
+          docker push ${{ steps.meta.outputs.tags }}
       - name: Get Version ID
         id: get-version-id
+        shell: sh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /user/packages/container/ci-test/versions \
-            --jq '.[]|select(.metadata.container.tags|contains(["${{ steps.meta.outputs.tags }}"]))|.id'
+          echo tags=$(
+            gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /user/packages/container/ci-test/versions \
+              --jq ".[]|select(.name==sha=$(docker inspect -f='{{.Id}}' scratch))|.id"
+          )
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
