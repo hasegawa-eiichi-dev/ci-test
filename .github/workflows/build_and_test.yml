@@ -53,7 +53,7 @@ jobs:
             type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
           push: true
           sbom: false
-          provenance: true  # https://chroju.dev/blog/docker_buildx_slsa_provenance
+          provenance: false  # https://chroju.dev/blog/docker_buildx_slsa_provenance
           no-cache: true
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
@@ -121,7 +121,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        options: --entrypoint=/bin/ci_test
+        # options: --entrypoint=/bin/ci_test
     steps:
       - name: System Test
         shell: sh
