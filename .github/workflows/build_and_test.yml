@@ -54,7 +54,7 @@ jobs:
             build_env=${{ inputs.build_env }}
           tags: |
             ${{ needs.set-vars.outputs.tags }}
-            multiple-tag-test
+            ghcr.io/${{ github.repository_owner }}/ci-test:multiple-tag-test
           labels: ${{ needs.set-vars.outputs.labels }}
           annotations: ${{ needs.set-vars.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
