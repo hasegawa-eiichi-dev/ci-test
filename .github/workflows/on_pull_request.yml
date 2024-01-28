@@ -3,29 +3,8 @@ on:
   - push  # test
 
 jobs:
-  set-vars:
-    name: Set Vars
-    runs-on: ubuntu-latest
-    outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-      labels: ${{ steps.meta.outputs.labels }}
-      annotations: ${{ steps.meta.outputs.annotations }}
-    steps:
-      - name: Docker Metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/ci-test
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{raw}}
-            typr=raw,value={{base_ref}}
   call-on-pull-request:
     name: Call on-pull-request Workflow
     uses: ./.github/workflows/build_and_test.yml
     with:
       build_env: dev
-      tags: ${{ needs.set-vars.outputs.tags }}
-    needs:
-      - set-vars

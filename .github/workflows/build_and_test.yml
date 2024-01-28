@@ -5,15 +5,33 @@ on:
         description: dev / stg / prd
         required: true
         type: string
-      tags:
-        description: docker image tags
-        required: true
-        type: string
 
 jobs:
+  set-vars:
+    name: Set Vars
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      labels: ${{ steps.meta.outputs.labels }}
+      annotations: ${{ steps.meta.outputs.annotations }}
+    steps:
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/ci-test
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{raw}}
+            typr=raw,value={{base_ref}}
   build-image:
     name: Build Image
     runs-on: ubuntu-latest
+    needs:
+      - set-vars
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,7 +44,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.github_token }}
+          password: ${{ github.token }}
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
@@ -34,15 +52,15 @@ jobs:
           target: build
           build-args: |
             build_env=${{ inputs.build_env }}
-          tags: ${{ inputs.tags }}
-          # labels: ${{ needs.set-vars.outputs.labels }}
-          # annotations: ${{ needs.set-vars.outputs.annotations }}
+          tags: ${{ needs.set-vars.outputs.tags }}
+          labels: ${{ needs.set-vars.outputs.labels }}
+          annotations: ${{ needs.set-vars.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
           cache-from: |
-            type=gha,scope=${{ inputs.tags }}
-            type=registry,ref=${{ inputs.tags }}
+            type=gha,scope=${{ needs.set-vars.outputs.tags }}
+            type=registry,ref=${{ needs.set-vars.outputs.tags }}
           cache-to: |
-            type=gha,mode=max,scope=${{ inputs.tags }}
+            type=gha,mode=max,scope=${{ needs.set-vars.outputs.tags }}
           push: true
           sbom: true
           provenance: true
@@ -54,6 +72,21 @@ jobs:
           package-type: container
           delete-only-untagged-versions: true
           min-versions-to-keep: 0
+      # test
+      - name: Get Version ID
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=ref,event=branch
+      - name: Delete Package Versions
+        uses: actions/delete-package-versions@v4
+        with:
+          owner: ${{ github.repository_owner }}
+          package-name: ci-test
+          package-type: container
+          package-version-ids: ${{ steps.meta.outputs.tags }}
+      # test
   build-pages:
     name: Build Pages
     runs-on: ubuntu-latest
@@ -69,14 +102,14 @@ jobs:
         with:
           context: .
           target: base
-          tags: ${{ inputs.tags }}-base
+          tags: ${{ needs.build-image.outputs.tags }}-base
           cache-from: |
-            type=gha,scope=${{ inputs.tags }}
+            type=gha,scope=${{ needs.build-image.outputs.tags }}
           load: true
       - name: Nimble Doc2
         shell: sh
         run: |
-          docker run --rm -v $(pwd)/docs:/ci-test/docs ${{ inputs.tags }}-base nimble doc2 -o:docs/developer src/ci_test.nim
+          docker run --rm -v $(pwd)/docs:/ci-test/docs ${{ needs.build-image.outputs.tags }}-base nimble doc2 -o:docs/developer src/ci_test.nim
           find docs -name *.idx | xargs sudo rm
   nimble-test:
     name: Nimble Test
@@ -93,14 +126,14 @@ jobs:
         with:
           context: .
           target: base
-          tags: ${{ inputs.tags }}-base
+          tags: ${{ needs.build-image.outputs.tags }}-base
           cache-from: |
-            type=gha,scope=${{ inputs.tags }}
+            type=gha,scope=${{ needs.build-image.outputs.tags }}
           load: true
       - name: Nimble Test
         shell: sh
         run: |
-          docker run --rm ${{ inputs.tags }}-base nimble test
+          docker run --rm ${{ needs.build-image.outputs.tags }}-base nimble test
   system-test:
     name: System Test
     runs-on: ubuntu-latest
@@ -108,7 +141,7 @@ jobs:
       - build-image
     services:
       ci-test:
-        image: ${{ inputs.tags }}
+        image: ${{ needs.build-image.outputs.tags }}
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
