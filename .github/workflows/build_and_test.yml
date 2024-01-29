@@ -39,7 +39,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          target: build
           build-args: |
             build_env=${{ inputs.build_env }}
           tags: |
