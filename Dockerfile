@@ -10,7 +10,8 @@ COPY . .
 FROM base AS build
 ARG build_env
 RUN nimble -y install -p:"-d:${build_env}"
+ENTRYPOINT /ci-test/bin/ci_test
 
-FROM scratch
+FROM alpine
 COPY --from=build /ci-test/bin /bin
 ENTRYPOINT /bin/ci_test
