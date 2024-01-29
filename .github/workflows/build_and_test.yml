@@ -52,7 +52,7 @@ jobs:
           cache-to: |
             type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
           push: true
-          sbom: true
+          # sbom: true
           provenance: false  # true  # https://chroju.dev/blog/docker_buildx_slsa_provenance
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
