@@ -1,3 +1,6 @@
+ARG BUILDKIT_SBOM_SCAN_CONTEXT=true
+ARG BUILDKIT_SBOM_SCAN_STAGE=true
+
 FROM nimlang/nim:2.0.2-alpine AS nim_with_clang
 RUN apk add clang
 
