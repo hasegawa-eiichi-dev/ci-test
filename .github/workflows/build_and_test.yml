@@ -38,6 +38,25 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{raw}}
             typr=raw,value={{base_ref}}
+      # - name: Build and Push
+        # uses: docker/build-push-action@v5
+        # with:
+        #   context: .
+        #   build-args: |
+        #     build_env=${{ inputs.build_env }}
+        #   tags: |
+        #     ${{ steps.meta.outputs.tags }}
+        #   labels: ${{ steps.meta.outputs.labels }}
+        #   annotations: ${{ steps.meta.outputs.annotations }}
+        #   platforms: linux/amd64
+        #   cache-from: |
+        #     type=gha,scope=${{ steps.meta.outputs.tags }}
+        #     type=registry,ref=${{ steps.meta.outputs.tags }}
+        #   cache-to: |
+        #     type=gha,mode=max,scope=${{ steps.meta.outputs.tags }}
+        #   push: true
+        #   sbom: true
+        #   provenance: true  # https://chroju.dev/blog/docker_buildx_slsa_provenance
       - name: Build and Push
         shell: sh
         run: |
@@ -51,8 +70,6 @@ jobs:
             --cache-to=type=gha,scope=${{ steps.meta.outputs.tags }} \
             --push \
             -t ${{ steps.meta.outputs.tags }} .
-            -t hasegawa0eiichi/ci-test .
-
       - name: Delete Package Versions
         uses: actions/delete-package-versions@v4
         with:
